@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PrepaiBackendApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(PrepaiBackendApplication.class, args);
 	}
 

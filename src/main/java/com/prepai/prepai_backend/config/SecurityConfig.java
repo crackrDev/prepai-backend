@@ -28,9 +28,11 @@ public class SecurityConfig {
                         // Public endpoints - no token needed
                         .requestMatchers("/api/questions").permitAll()
                         .requestMatchers("/api/questions/**").permitAll()
+                        .requestMatchers("/api/resume/parse").permitAll()
+                        .requestMatchers("/api/sessions/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
-                        // Everything else needs JWT
+                        // Everything else needs JWT protected endpoints JWT needed
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
