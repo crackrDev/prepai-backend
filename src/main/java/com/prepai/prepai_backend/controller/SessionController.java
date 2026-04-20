@@ -1,8 +1,8 @@
 package com.prepai.prepai_backend.controller;
 
-import com.prepai.prepai_backend.dto.SessionStartRequest;
-import com.prepai.prepai_backend.dto.SessionStartResponse;
+import com.prepai.prepai_backend.dto.*;
 import com.prepai.prepai_backend.model.Session;
+import com.prepai.prepai_backend.service.MessageService;
 import com.prepai.prepai_backend.service.SessionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/sessions")
 @CrossOrigin(origins = "*")
 public class SessionController {
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private SessionService sessionService;
@@ -31,14 +35,39 @@ public class SessionController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getSession(@PathVariable String id){
 
-        Session session = sessionService.getSessionById(id);
+      SessionDetailResponse response = sessionService.getSessionDetail(id);
 
-        if(session == null){
+        if(response == null){
             Map<String, String> error = new HashMap<>();
             error.put("error", "Session not found");
             return ResponseEntity.status(404).body(error);
         }
-        return ResponseEntity.ok(session);
+        return ResponseEntity.ok(response);
     }
+    //POST /api/sessions/{id}/message
+    @PostMapping("/{id}/message")
+    public ResponseEntity<?> saveMessage(@PathVariable String id, @Valid @RequestBody MessageRequest request){
+        MessageResponse response = messageService.saveMessage(id, request);
+        return ResponseEntity.ok(response);
+    }
+    //POST /api/sessions/{id}/end
+    @PostMapping("/{id}/end")
+    public ResponseEntity<?> endSession(@PathVariable String id, @RequestBody SessionEndRequest request){
+        SessionEndResponse response = sessionService.endSession(id, request);
+
+        if(response == null){
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Session not found");
+            return ResponseEntity.status(404).body(error);
+        }
+        return  ResponseEntity.ok(response);
+    }
+    // GET /api/sessions/user/{userId}
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUserSessions(@PathVariable String userId){
+        List<UserSessionResponse> sessions = sessionService.getUserSessions(userId);
+        return ResponseEntity.ok(sessions);
+    }
+
 
 }

@@ -20,7 +20,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // disable for REST APIs
+                .csrf(csrf -> csrf.disable()) // disable for REST APIs. csrf sometimes block the post request so, we have to disable it to prevent the blocking of testing API
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -29,9 +29,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/questions").permitAll()
                         .requestMatchers("/api/questions/**").permitAll()
                         .requestMatchers("/api/resume/parse").permitAll()
+                        .requestMatchers("/api/sessions/start").permitAll()
                         .requestMatchers("/api/sessions/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
+                        //For temporary purpose
+                        .requestMatchers("/**").permitAll()
+
                         // Everything else needs JWT protected endpoints JWT needed
                         .anyRequest().authenticated()
                 )
