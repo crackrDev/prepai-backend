@@ -16,7 +16,7 @@ public class SessionStartRequest {
     private String difficulty;
 
     @NotBlank(message = "roundtype is required")
-    private String roundtype;
+    private String roundType;
 
     private String resumeUrl; //Optional
 

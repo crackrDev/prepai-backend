@@ -21,6 +21,9 @@ import java.util.stream.Collectors;
 public class SessionService {
 
     @Autowired
+    private ScoringService scoringService;
+
+    @Autowired
     private MessageRepository messageRepository;
 
     @Autowired
@@ -39,7 +42,7 @@ public class SessionService {
         session.setUserId(request.getUserId());
         session.setRole(request.getRole());
         session.setDifficulty(request.getDifficulty());
-        session.setRoundType(request.getRoundtype());
+        session.setRoundType(request.getRoundType());
         session.setResumeUrl(request.getResumeUrl());
         session.setStatus("active");
 
@@ -47,7 +50,7 @@ public class SessionService {
 
         //Fetch Relevant question for this session
         List<Question> questions = questionRepository
-                .findByRoleAndDifficultyAndType(request.getRole(), request.getDifficulty(), request.getRoundtype());
+                .findByRoleAndDifficultyAndType(request.getRole(), request.getDifficulty(), request.getRoundType());
 
         //Get just the IDs — frontend will use
         List<String> questionIds = questions.stream()
@@ -76,6 +79,8 @@ public class SessionService {
         session.setStatus("completed");
         session.setEndedAt(LocalDateTime.now());
         sessionRepository.save(session);
+        //Trigger scoring automatically, so it will be async.Frontend don't wait for that it will happen in background
+        scoringService.scoreSessionAsync(sessionId);
 
         //3.Return Response
         SessionEndResponse response = new SessionEndResponse();
