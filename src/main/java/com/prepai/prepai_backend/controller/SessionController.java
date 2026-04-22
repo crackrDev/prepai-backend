@@ -62,11 +62,12 @@ public class SessionController {
         }
         return  ResponseEntity.ok(response);
     }
-    // GET /api/sessions/user/{userId}
+    // GET /api/sessions/user/{userId}?page=0&size=10
     @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getUserSessions(@PathVariable String userId){
-        List<UserSessionResponse> sessions = sessionService.getUserSessions(userId);
-        return ResponseEntity.ok(sessions);
+    public ResponseEntity<?> getUserSessions(@PathVariable String userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size){
+        PageResponse<UserSessionResponse> response = sessionService.getUserSessions(userId, page, size);
+
+        return ResponseEntity.ok(response);
     }
 
 

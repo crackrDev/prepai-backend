@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/sessions/start").permitAll()
                         .requestMatchers("/api/score/**").permitAll()
                         .requestMatchers("/api/results/**").permitAll()
+                        .requestMatchers("/api/progress/**").permitAll()
                         .requestMatchers("/api/sessions/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()

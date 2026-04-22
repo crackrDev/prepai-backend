@@ -6,7 +6,12 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sessions")
+//updating Table annotation which is named as sessions.
+@Table(name = "sessions", indexes = {
+        @Index(name = "idx_sessions_user_id", columnList = "user_id"),
+        @Index(name = "idx_sessions_status", columnList = "status")
+}
+)
 @Data
 public class Session {
 

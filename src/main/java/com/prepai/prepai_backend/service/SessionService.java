@@ -10,6 +10,10 @@ import com.prepai.prepai_backend.repository.QuestionRepository;
 import com.prepai.prepai_backend.repository.ResultRepository;
 import com.prepai.prepai_backend.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -103,23 +107,39 @@ public class SessionService {
         response.setStatus(session.getStatus());
         return response;
     }
-    //Get all sessions for a user with scores
-    public List<UserSessionResponse> getUserSessions(String userId){
+    //Get all sessions for a user with scores now update this with pagination
+    public PageResponse<UserSessionResponse> getUserSessions(String userId, int page, int size){
+        //sort by latest first
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startedAt"));
 
-        List<Session> sessions = sessionRepository.findByUserId(userId);
-        return sessions.stream().map(session ->{
-            UserSessionResponse res = new UserSessionResponse();
-            res.setId(session.getId());
-            res.setRole(session.getRole());
-            res.setDate(session.getStartedAt());
+        Page<Session> sessionPage = sessionRepository.findByUserId(userId, pageable);
 
-            //check if result exist for this session
-            Optional<Result> result = resultRepository.findBySessionId(session.getId());
-            result.ifPresent(r -> res.setOverallScore(r.getOverallScore()));
+        //Map to Response
+        List<UserSessionResponse> items = sessionPage.getContent().stream()
+                .map(session ->{
+                    UserSessionResponse res = new  UserSessionResponse();
+                    res.setId(session.getId());
+                    res.setRole(session.getRole());
+                    res.setDate(session.getStartedAt());
 
-            return res;
+                    Optional<Result> result = resultRepository.findBySessionId(session.getId());
+                    result.ifPresent(r -> res.setOverallScore(r.getOverallScore()));
 
-        }).collect(Collectors.toList());
+                    return res;
+                })
+                .collect(Collectors.toList());
+
+        //Build Page Response
+        PageResponse<UserSessionResponse> response = new PageResponse<>();
+        response.setContent(items);
+        response.setPage(page);
+        response.setSize(size);
+        response.setTotalElements(sessionPage.getTotalElements());
+        response.setTotalPages(sessionPage.getTotalPages());
+        response.setLast(sessionPage.isLast());
+
+        return response;
     }
+
 
 }
