@@ -3,9 +3,12 @@ package com.prepai.prepai_backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prepai.prepai_backend.dto.ResultResponse;
 import com.prepai.prepai_backend.dto.ScoreResponse;
+import com.prepai.prepai_backend.exception.ResourceNotFoundException;
 import com.prepai.prepai_backend.model.Result;
 import com.prepai.prepai_backend.repository.ResultRepository;
 import com.prepai.prepai_backend.service.ScoringService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,10 @@ import java.util.*;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 public class ScoreController {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(ScoreController.class);
+
     @Autowired
     private ScoringService scoringService;
 
@@ -27,26 +34,31 @@ public class ScoreController {
     // POST /api/score/{sessionId} — Manual trigger
     @PostMapping("/score/{sessionId}")
     public ResponseEntity<?> scoreSession(@PathVariable String sessionId){
+
+        log.info("Manual score trigger for session: {}", sessionId);
+
         ScoreResponse score = scoringService.scoreSession(sessionId);
 
         if(score == null){
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Session not found or scoring failed");
-            return ResponseEntity.status(404).body(error);
-
+            throw ResourceNotFoundException.session(sessionId);
         }
         return ResponseEntity.ok(score);
     }
     //GET /api/results/{sessionId} — Frontend results page will use that
     @GetMapping("/results/{sessionId}")
     public ResponseEntity<?> getResults(@PathVariable String sessionId){
+
+        log.info("Fetching results for session: {}", sessionId);
+
         Optional<Result> resultOpt = resultRepository.findBySessionId(sessionId);
 
         if(resultOpt.isEmpty()){
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Results not ready yet");
-            error.put("status", "processing");
-            return ResponseEntity.status(404).body(error);
+
+            log.info("Fetching results for session: {}", sessionId);
+//            Map<String, String> error = new HashMap<>();
+//            error.put("error", "Results not ready yet");
+//            error.put("status", "processing");
+//            return ResponseEntity.status(404).body(error);
         }
         Result result = resultOpt.get();
 
@@ -72,7 +84,8 @@ public class ScoreController {
                     )
             );
         } catch (Exception e) {
-            System.err.println("Feedback parse error: " + e.getMessage());
+            log.error("Feedback parse error: {}", e.getMessage());
+            //            System.err.println("Feedback parse error: " + e.getMessage());
         }
         scores.setFeedback(feedbackList);
 
