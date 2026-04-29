@@ -42,4 +42,13 @@ public class Session {
 
     @Column(name = "status", length = 20)
     private String status = "active"; // active, completed, scored
+
+    @Column(name = "candidate_name", length = 100)
+    private String candidateName;
+
+    @Column(name = "company", length = 100)
+    private String company;
+
+    @Column(name = "resume_text", columnDefinition = "TEXT")
+    private String resumeText;
 }

@@ -23,6 +23,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException{
 
+        String path = request.getServletPath();
+
+        //Swagger + openAI endpoints skips this
+        if(path.contains("/v3/api-docs")||path.contains("/swagger-ui")){
+
+            filterChain.doFilter(request,response);
+            return;
+        }
+
         String authHeader = request.getHeader("Authorization");
 
         // If no token — skip (public endpoints handle this)
@@ -31,6 +40,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
         String token = authHeader.substring(7);
+
+
 
         if(jwtUtil.isTokenValid(token)){
             String userId = jwtUtil.extractUserId(token);

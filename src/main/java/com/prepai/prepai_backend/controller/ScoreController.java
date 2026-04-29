@@ -7,6 +7,10 @@ import com.prepai.prepai_backend.exception.ResourceNotFoundException;
 import com.prepai.prepai_backend.model.Result;
 import com.prepai.prepai_backend.repository.ResultRepository;
 import com.prepai.prepai_backend.service.ScoringService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
+@Tag(name = "Scoring & Results", description = "GPT-4 scoring and results endpoints")
 public class ScoreController {
 
     private static final Logger log =
@@ -30,6 +35,12 @@ public class ScoreController {
     private ResultRepository resultRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Operation(
+            summary = "Manually trigger scoring",
+            description = "Manually triggers GPT-4 scoring for a session. " +
+                    "Normally called automatically when session ends."
+    )
 
     // POST /api/score/{sessionId} — Manual trigger
     @PostMapping("/score/{sessionId}")
@@ -44,6 +55,17 @@ public class ScoreController {
         }
         return ResponseEntity.ok(score);
     }
+
+    @Operation(
+            summary = "Get session results",
+            description = "Returns 5-category scores, feedback points, " +
+                    "improved areas and session summary."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Results ready"),
+            @ApiResponse(responseCode = "404",
+                    description = "Results not ready yet — scoring in progress")
+    })
     //GET /api/results/{sessionId} — Frontend results page will use that
     @GetMapping("/results/{sessionId}")
     public ResponseEntity<?> getResults(@PathVariable String sessionId){

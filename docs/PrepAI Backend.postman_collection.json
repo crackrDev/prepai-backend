@@ -1,0 +1,282 @@
+{
+  "info": {
+    "_postman_id": "324fe9d2-a453-4899-9963-a4200473eb3a",
+    "name": "PrepAI Backend",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "54094696",
+    "_collection_link": "https://go.postman.co/collection/54094696-324fe9d2-a453-4899-9963-a4200473eb3a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "User Progress",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/progress/{userId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "progress",
+            "{userId}"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Questions",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Successful POST request\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"name\": \"Add your name in the body\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/questions?role=backend&difficulty=medium",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "questions"
+          ],
+          "query": [
+            {
+              "key": "role",
+              "value": "backend"
+            },
+            {
+              "key": "difficulty",
+              "value": "medium"
+            }
+          ]
+        },
+        "description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Question By Id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/questions/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "questions",
+            "{id}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Parse Resume",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/resume/parse",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "resume",
+            "parse"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Score Session",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/score/{sessionId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "score",
+            "{sessionId}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Results",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/results/{sessionId}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "results",
+            "{sessionId}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Start Session",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/start",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sessions",
+            "start"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Session",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/{id}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sessions",
+            "{id}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Save Message",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/{id}/message",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sessions",
+            "{id}",
+            "message"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "End Session",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/{id}/end",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sessions",
+            "{id}",
+            "end"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Sessions",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/sessions/user/userId",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "sessions",
+            "user",
+            "userId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Realtime Token",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/realtime/token",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "realtime",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
