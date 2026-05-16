@@ -54,11 +54,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-      //  configuration.setAllowedOrigins(Arrays.asList(
-             //   "http://localhost:3000",
-             //   "http://localhost:3001",
+       //configuration.setAllowedOrigins(Arrays.asList(
+            //   "http://localhost:3000",
+            //    "http://localhost:3001",
              //   "https://prepai.vercel.app",        // Frontend production URL
-            //   "https://prepai-frontend.vercel.app")); // alternate
+            //"https://prepai-frontend.vercel.app")); // alternate
                 //Temporarily it is not allowed for this time. We have to get the real url from frontend. Now it is dummy url
                 configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 

@@ -12,19 +12,19 @@ public class SessionStartRequest {
 
     @NotBlank(message = "role is required")
     @Pattern(
-            regexp = "frontend|backend|fullstack|devops|data",
+            regexp = "Frontend|Backend|Full Stack|DevOps|Data Engineering|Android|Machine Learning|Data Science",
             message = "role must be one of: frontend, backend, fullstack, devops, data"
     )
     private String role;
 
     @NotBlank(message = "difficulty is required")
     @Pattern(
-            regexp = "easy|medium|hard",
+            regexp = "Easy|Medium|Hard",
             message = "difficulty must be: easy, medium, or hard"
     )
     private String difficulty;
 
-    @NotBlank(message = "roundtype is required")
+    @NotBlank(message = "roundType is required")
     @Pattern(
             regexp = "technical|hr",
             message = "roundType must be: technical or hr"
